@@ -1,18 +1,18 @@
 ﻿namespace BettingSystem.Data.XmlFeedModels
 {
     using System.Collections.Generic;
+    using System.Xml.Serialization;
 
+    [XmlRoot(ElementName = "Sport")]
     public class Sport
     {
-        public Sport()
-        {
-            this.Events = new HashSet<Event>();
-        }
-
+        [XmlAttribute(AttributeName = "ID")]
         public int Id { get; set; }
 
+        [XmlAttribute(AttributeName = "Name")]
         public string Name { get; set; }
 
-        public ICollection<Event> Events { get; set; }
+        [XmlElement(ElementName = "Event")]
+        public HashSet<Event> Events { get; set; }
     }
 }

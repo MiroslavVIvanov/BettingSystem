@@ -1,20 +1,21 @@
 ﻿namespace BettingSystem.Data.XmlFeedModels
 {
     using System.Collections.Generic;
+    using System.Xml.Serialization;
 
+    [XmlRoot(ElementName = "Bet")]
     public class Bet
     {
-        public Bet()
-        {
-            this.Odds = new HashSet<Odd>();
-        }
-
+        [XmlAttribute(AttributeName = "ID")]
         public int Id { get; set; }
 
+        [XmlAttribute(AttributeName = "Name")]
         public string Name { get; set; }
 
+        [XmlAttribute(AttributeName = "IsLive")]
         public bool IsLive { get; set; }
 
-        ICollection<Odd> Odds { get; set; }
+        [XmlElement(ElementName = "Odd")]
+        HashSet<Odd> Odds { get; set; }
     }
 }

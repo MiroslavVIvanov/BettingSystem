@@ -16,6 +16,6 @@
         public bool IsLive { get; set; }
 
         [XmlElement(ElementName = "Odd")]
-        HashSet<Odd> Odds { get; set; }
+        internal HashSet<Odd> Odds { get; set; }
     }
 }

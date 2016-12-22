@@ -6,6 +6,7 @@
     [XmlRoot(ElementName = "Event")]
     public class Event
     {
+        // TODO: delete ctor
         public Event()
         {
             this.Matches = new HashSet<Match>();

@@ -1,7 +1,7 @@
 ﻿namespace BettingSystem.Data
 {
-    using System;
     using System.IO;
+    using System.Linq;
     using System.Xml;
     using System.Xml.Serialization;
     using XmlFeedModels;
@@ -14,15 +14,25 @@
             SportsCollection sports = this.Parse(reader);
 
             this.UpdateDataBase(sports);
-
-            using (StreamWriter wr = new StreamWriter("Log.txt", true))
-            {
-                wr.WriteLine("fetched at: {0}", sports.CreateDate);
-            }
         }
 
         public void UpdateDataBase(SportsCollection collection)
         {
+            BetsDbContext context = new BetsDbContext();
+            string test = collection.Sports.First().Name;
+
+            Models.Sport testSport = new Models.Sport()
+            {
+                Name = test
+            };
+
+            context.SaveChanges();
+
+            using (StreamWriter wr = new StreamWriter("Log.txt", true))
+            {
+                wr.WriteLine("count: {0}", context.Sports.Count());
+            }
+
         }
 
         private XmlReader Fetch(string url)

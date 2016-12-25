@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleClient", "Console\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BettingSystem.DataBaseUpdateService", "Services\BettingSystem.DataBaseUpdateService\BettingSystem.DataBaseUpdateService.csproj", "{43FDD46A-BB07-44CE-804A-36E90807F56F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BettingSystem.Web.Mvc", "Web\BettingSystem.Web.Mvc\BettingSystem.Web.Mvc.csproj", "{BD4C44B0-7F03-4D77-94C8-AF3A9C501266}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{43FDD46A-BB07-44CE-804A-36E90807F56F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43FDD46A-BB07-44CE-804A-36E90807F56F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43FDD46A-BB07-44CE-804A-36E90807F56F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD4C44B0-7F03-4D77-94C8-AF3A9C501266}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD4C44B0-7F03-4D77-94C8-AF3A9C501266}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD4C44B0-7F03-4D77-94C8-AF3A9C501266}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD4C44B0-7F03-4D77-94C8-AF3A9C501266}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,5 +63,6 @@ Global
 		{AB8A7AEE-EC27-4D06-B9C8-0FE2F90008E2} = {E8475EEE-B41F-4499-A126-1A84ED79E69F}
 		{433DE860-9AFA-4906-80D4-43A053A81705} = {41124161-551F-4520-9F64-5AFAC2B711E9}
 		{43FDD46A-BB07-44CE-804A-36E90807F56F} = {E2D8FB7E-4B35-4C50-A886-C06AEFEA6200}
+		{BD4C44B0-7F03-4D77-94C8-AF3A9C501266} = {BF3B234E-52BC-4FE1-852C-D16051F1B50B}
 	EndGlobalSection
 EndGlobal

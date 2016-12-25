@@ -15,9 +15,7 @@
         {
             XmlReader reader = this.Fetch(url);
             SportsCollection sports = this.Parse(reader);
-
             this.oldCollection = sports;
-
             this.CreateDataBase(sports);
         }
 
@@ -25,9 +23,8 @@
         {
             XmlReader reader = this.Fetch(url);
             SportsCollection sports = this.Parse(reader);
-
             SportsCollection uniqueSports = GetUniqueEntities(sports, this.oldCollection);
-            
+            this.oldCollection = sports;
             this.CreateDataBase(uniqueSports);
         }
 

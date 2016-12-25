@@ -12,7 +12,7 @@
         {
             var timer = new Timer(work =>
             {
-                new XmlProcessor().ProccessXmlToDatabase(BetsXmlFeedUrl);
+                new XmlProcessor().InitializeDatabase(BetsXmlFeedUrl);
             });
 
             timer.Change(TimeSpan.Zero, TimeSpan.FromMinutes(1));

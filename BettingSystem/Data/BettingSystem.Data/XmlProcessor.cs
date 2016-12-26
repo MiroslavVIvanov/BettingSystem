@@ -16,7 +16,7 @@
             XmlReader reader = this.Fetch(url);
             SportsCollection sports = this.Parse(reader);
             this.oldCollection = sports;
-            this.CreateDataBase(sports);
+            this.CreateOrUpdateDataBase(sports);
         }
 
         public void UpdateDatabase(string url)
@@ -25,7 +25,7 @@
             SportsCollection sports = this.Parse(reader);
             SportsCollection uniqueSports = GetUniqueEntities(sports, this.oldCollection);
             this.oldCollection = sports;
-            this.CreateDataBase(uniqueSports);
+            this.CreateOrUpdateDataBase(uniqueSports);
         }
 
         private SportsCollection GetUniqueEntities(SportsCollection newSportsCollection, SportsCollection oldSportsCollection)
@@ -35,112 +35,110 @@
         }
 
 
-        private void CreateDataBase(SportsCollection xmlFeedModelsCollection)
+        private void CreateOrUpdateDataBase(SportsCollection xmlFeedModelsCollection)
         {
-            if (xmlFeedModelsCollection == null)
+            if (xmlFeedModelsCollection != null)
             {
-                return;
-            }
+                BetsDbContext context = new BetsDbContext();
+                var sportsContext = new EfGenericRepository<Models.Sport>(context);
+                var eventsContext = new EfGenericRepository<Models.Event>(context);
+                var matchesContext = new EfGenericRepository<Models.Match>(context);
+                var betsContext = new EfGenericRepository<Models.Bet>(context);
 
-            BetsDbContext context = new BetsDbContext();
-            var sportsContext = new EfGenericRepository<Models.Sport>(context);
-            var eventsContext = new EfGenericRepository<Models.Event>(context);
-            var matchesContext = new EfGenericRepository<Models.Match>(context);
-            var betsContext = new EfGenericRepository<Models.Bet>(context);
-
-            var allSports = new HashSet<Models.Sport>(sportsContext.All());
-            var allSportEvents = new HashSet<Models.Event>(eventsContext.All());
-            var allMatches = new HashSet<Models.Match>(matchesContext.All());
-            var allBets = new HashSet<Models.Bet>(betsContext.All());
+                var allSports = new HashSet<Models.Sport>(sportsContext.All());
+                var allSportEvents = new HashSet<Models.Event>(eventsContext.All());
+                var allMatches = new HashSet<Models.Match>(matchesContext.All());
+                var allBets = new HashSet<Models.Bet>(betsContext.All());
 
 
-            //var allSports = sportsContext.All();
+                //var allSports = sportsContext.All();
 
-            foreach (XmlFeedModels.Sport sport in xmlFeedModelsCollection.Sports)
-            {
-                //var currentSport = sportsContext.GetById(sport.Id);
-                var currentSport = allSports.FirstOrDefault(s => s.Id == sport.Id);
-
-                if (currentSport == null)
+                foreach (XmlFeedModels.Sport sport in xmlFeedModelsCollection.Sports)
                 {
-                    currentSport = new Models.Sport()
+                    //var currentSport = sportsContext.GetById(sport.Id);
+                    var currentSport = allSports.FirstOrDefault(s => s.Id == sport.Id);
+
+                    if (currentSport == null)
                     {
-                        Id = sport.Id,
-                        Name = sport.Name
-                    };
-
-                    sportsContext.Add(currentSport);
-                }
-
-                //var allSportEvents = eventsContext.All();
-
-                foreach (XmlFeedModels.Event sportEvent in sport.Events)
-                {
-                    //var currentEvent = eventsContext.GetById(sportEvent.Id);
-                    var currentEvent = allSportEvents.FirstOrDefault(e => e.Id == sportEvent.Id);
-
-                    if (currentEvent == null)
-                    {
-                        currentEvent = new Models.Event()
+                        currentSport = new Models.Sport()
                         {
-                            Id = sportEvent.Id,
-                            Name = sportEvent.Name,
-                            CategoryId = sportEvent.CategoryId,
-                            IsLive = sportEvent.IsLive,
-                            SportId = currentSport.Id
+                            Id = sport.Id,
+                            Name = sport.Name
                         };
 
-                        eventsContext.Add(currentEvent);
+                        sportsContext.Add(currentSport);
                     }
 
-                    //var allMatches = matchesContext.All();
+                    //var allSportEvents = eventsContext.All();
 
-                    foreach (XmlFeedModels.Match match in sportEvent.Matches)
+                    foreach (XmlFeedModels.Event sportEvent in sport.Events)
                     {
-                        //var currentMatch = matchesContext.GetById(match.Id);
-                        var currentMatch = allMatches.FirstOrDefault(m => m.Id == match.Id);
+                        //var currentEvent = eventsContext.GetById(sportEvent.Id);
+                        var currentEvent = allSportEvents.FirstOrDefault(e => e.Id == sportEvent.Id);
 
-                        if (currentMatch == null)
+                        if (currentEvent == null)
                         {
-                            currentMatch = new Models.Match()
+                            currentEvent = new Models.Event()
                             {
-                                Id = match.Id,
-                                Name = match.Name,
-                                StartDate = match.StartDate,
-                                MatchType = match.MatchType,
-                                EventId = currentEvent.Id
+                                Id = sportEvent.Id,
+                                Name = sportEvent.Name,
+                                CategoryId = sportEvent.CategoryId,
+                                IsLive = sportEvent.IsLive,
+                                SportId = currentSport.Id
                             };
 
-                            matchesContext.Add(currentMatch);
+                            eventsContext.Add(currentEvent);
                         }
 
-                        //var allBets = betsContext.All();
+                        //var allMatches = matchesContext.All();
 
-                        foreach (XmlFeedModels.Bet bet in match.Bets)
+                        foreach (XmlFeedModels.Match match in sportEvent.Matches)
                         {
-                            //var currentBet = betsContext.GetById(bet.Id);
-                            var currentBet = allBets.FirstOrDefault(b => b.Id == bet.Id);
+                            //var currentMatch = matchesContext.GetById(match.Id);
+                            var currentMatch = allMatches.FirstOrDefault(m => m.Id == match.Id);
 
-                            if (currentBet == null)
+                            if (currentMatch == null)
                             {
-                                currentBet = new Models.Bet()
+                                currentMatch = new Models.Match()
                                 {
-                                    Id = bet.Id,
-                                    Name = bet.Name,
-                                    IsLive = bet.IsLive,
-                                    MatchId = currentMatch.Id
+                                    Id = match.Id,
+                                    Name = match.Name,
+                                    StartDate = match.StartDate,
+                                    MatchType = match.MatchType,
+                                    EventId = currentEvent.Id
                                 };
 
-                                betsContext.Add(currentBet);
+                                matchesContext.Add(currentMatch);
                             }
-                        }
 
-                        sportsContext.SaveChanges();
+                            //var allBets = betsContext.All();
+
+                            foreach (XmlFeedModels.Bet bet in match.Bets)
+                            {
+                                //var currentBet = betsContext.GetById(bet.Id);
+                                var currentBet = allBets.FirstOrDefault(b => b.Id == bet.Id);
+
+                                if (currentBet == null)
+                                {
+                                    currentBet = new Models.Bet()
+                                    {
+                                        Id = bet.Id,
+                                        Name = bet.Name,
+                                        IsLive = bet.IsLive,
+                                        MatchId = currentMatch.Id
+                                    };
+
+                                    betsContext.Add(currentBet);
+                                }
+                            }
+
+                            sportsContext.SaveChanges();
+                        }
                     }
                 }
-            }
 
-            sportsContext.SaveChanges();
+                sportsContext.SaveChanges();
+            }
         }
 
         private XmlReader Fetch(string url)

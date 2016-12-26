@@ -4,15 +4,19 @@
     using System.Threading;
     using BettingSystem.Data;
 
-    public class DataBaseUpdateService
+    public static class DataBaseUpdateService
     {
         private const string BetsXmlFeedUrl = @"http://vitalbet.net/sportxml";
 
-        public void Start()
+        public static void Start()
         {
+            // initialize the database
+            //new XmlProcessor().InitializeDatabase(BetsXmlFeedUrl);
+
+            // start the service after the database is filled with values
             var timer = new Timer(work =>
             {
-                new XmlProcessor().InitializeDatabase(BetsXmlFeedUrl);
+                new XmlProcessor().UpdateDatabase(BetsXmlFeedUrl);
             });
 
             timer.Change(TimeSpan.Zero, TimeSpan.FromMinutes(1));

@@ -10,27 +10,12 @@
     {
         private SportsCollection oldCollection;
 
-        public void InitializeDatabase(string url)
+        public void UpdateDatabase(string url)
         {
             XmlReader reader = this.Fetch(url);
             SportsCollection sports = this.Parse(reader);
             this.oldCollection = sports;
             this.CreateOrUpdateDataBase(sports);
-        }
-
-        public void UpdateDatabase(string url)
-        {
-            XmlReader reader = this.Fetch(url);
-            SportsCollection sports = this.Parse(reader);
-            SportsCollection uniqueSports = this.GetChangedEntities(sports, this.oldCollection);
-            this.oldCollection = sports;
-            this.CreateOrUpdateDataBase(uniqueSports);
-        }
-
-        private SportsCollection GetChangedEntities(SportsCollection newSportsCollection, SportsCollection oldSportsCollection)
-        {
-            // TODO: implement
-            return null;
         }
 
         private void CreateOrUpdateDataBase(SportsCollection xmlFeedModelsCollection)

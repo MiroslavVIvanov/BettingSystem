@@ -11,7 +11,7 @@
         public static void Start()
         {
             // initialize the database
-            //new XmlProcessor().InitializeDatabase(BetsXmlFeedUrl);
+            new XmlProcessor().InitializeDatabase(BetsXmlFeedUrl);
 
             // start the service after the database is filled with values
             var timer = new Timer(work =>

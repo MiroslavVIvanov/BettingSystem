@@ -1,9 +1,7 @@
 ﻿namespace BettingSystem.Data
 {
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
     using System.Xml;
     using System.Xml.Serialization;
     using XmlFeedModels;
@@ -11,6 +9,7 @@
     public class XmlProcessor
     {
         private SportsCollection oldCollection;
+
         public void InitializeDatabase(string url)
         {
             XmlReader reader = this.Fetch(url);
@@ -23,39 +22,36 @@
         {
             XmlReader reader = this.Fetch(url);
             SportsCollection sports = this.Parse(reader);
-            SportsCollection uniqueSports = GetUniqueEntities(sports, this.oldCollection);
+            SportsCollection uniqueSports = this.GetChangedEntities(sports, this.oldCollection);
             this.oldCollection = sports;
             this.CreateOrUpdateDataBase(uniqueSports);
         }
 
-        private SportsCollection GetUniqueEntities(SportsCollection newSportsCollection, SportsCollection oldSportsCollection)
+        private SportsCollection GetChangedEntities(SportsCollection newSportsCollection, SportsCollection oldSportsCollection)
         {
             // TODO: implement
             return null;
         }
 
-
         private void CreateOrUpdateDataBase(SportsCollection xmlFeedModelsCollection)
         {
             if (xmlFeedModelsCollection != null)
             {
-                BetsDbContext context = new BetsDbContext();
+                var context = new BetsDbContext();
                 var sportsContext = new EfGenericRepository<Models.Sport>(context);
                 var eventsContext = new EfGenericRepository<Models.Event>(context);
                 var matchesContext = new EfGenericRepository<Models.Match>(context);
                 var betsContext = new EfGenericRepository<Models.Bet>(context);
+                var oddsContext = new EfGenericRepository<Models.Odd>(context);
 
                 var allSports = new HashSet<Models.Sport>(sportsContext.All());
                 var allSportEvents = new HashSet<Models.Event>(eventsContext.All());
                 var allMatches = new HashSet<Models.Match>(matchesContext.All());
                 var allBets = new HashSet<Models.Bet>(betsContext.All());
-
-
-                //var allSports = sportsContext.All();
+                var allOdds = new HashSet<Models.Odd>(oddsContext.All());
 
                 foreach (XmlFeedModels.Sport sport in xmlFeedModelsCollection.Sports)
                 {
-                    //var currentSport = sportsContext.GetById(sport.Id);
                     var currentSport = allSports.FirstOrDefault(s => s.Id == sport.Id);
 
                     if (currentSport == null)
@@ -69,11 +65,8 @@
                         sportsContext.Add(currentSport);
                     }
 
-                    //var allSportEvents = eventsContext.All();
-
                     foreach (XmlFeedModels.Event sportEvent in sport.Events)
                     {
-                        //var currentEvent = eventsContext.GetById(sportEvent.Id);
                         var currentEvent = allSportEvents.FirstOrDefault(e => e.Id == sportEvent.Id);
 
                         if (currentEvent == null)
@@ -90,11 +83,8 @@
                             eventsContext.Add(currentEvent);
                         }
 
-                        //var allMatches = matchesContext.All();
-
                         foreach (XmlFeedModels.Match match in sportEvent.Matches)
                         {
-                            //var currentMatch = matchesContext.GetById(match.Id);
                             var currentMatch = allMatches.FirstOrDefault(m => m.Id == match.Id);
 
                             if (currentMatch == null)
@@ -111,11 +101,8 @@
                                 matchesContext.Add(currentMatch);
                             }
 
-                            //var allBets = betsContext.All();
-
                             foreach (XmlFeedModels.Bet bet in match.Bets)
                             {
-                                //var currentBet = betsContext.GetById(bet.Id);
                                 var currentBet = allBets.FirstOrDefault(b => b.Id == bet.Id);
 
                                 if (currentBet == null)
@@ -129,6 +116,25 @@
                                     };
 
                                     betsContext.Add(currentBet);
+                                }
+
+                                foreach (XmlFeedModels.Odd odd in bet.OddsCollection)
+                                {
+                                    var currentOdd = allOdds.FirstOrDefault(o => o.Id == odd.Id);
+
+                                    if (currentOdd == null)
+                                    {
+                                        currentOdd = new Models.Odd()
+                                        {
+                                            Id = odd.Id,
+                                            Name = odd.Name,
+                                            Value = odd.Value,
+                                            SpecialBetValue = odd.SpecialBetValue,
+                                            Bet = currentBet
+                                        };
+
+                                        oddsContext.Add(currentOdd);
+                                    }
                                 }
                             }
 

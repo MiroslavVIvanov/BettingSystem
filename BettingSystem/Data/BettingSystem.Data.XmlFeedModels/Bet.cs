@@ -15,6 +15,12 @@
         [XmlAttribute(AttributeName = "IsLive")]
         public bool IsLive { get; set; }
 
+        [XmlIgnore]
+        public HashSet<Odd> OddsCollection
+        {
+            get { return this.Odds; }
+        }
+
         [XmlElement(ElementName = "Odd")]
         internal HashSet<Odd> Odds { get; set; }
     }

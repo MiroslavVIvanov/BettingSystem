@@ -1,12 +1,12 @@
 ﻿namespace BettingSystem.Data
 {
-    using Models;
     using System.Data.Entity;
+    using Models;
 
     public class BetsDbContext : DbContext
     {
         public BetsDbContext()
-            :base("BettingSystemDatabase")
+            : base("TestBettingSystemDatabase")
         {
         }
 

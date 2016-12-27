@@ -160,6 +160,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Bet.cs" />
+    <Compile Include="Models\Event.cs" />
+    <Compile Include="Models\Match.cs" />
+    <Compile Include="Models\Odd.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -201,7 +205,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -211,9 +214,17 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Data\BettingSystem.Data.Models\BettingSystem.Data.Models.csproj">
+      <Project>{06400619-cc17-44cf-b11a-afa876ea8960}</Project>
+      <Name>BettingSystem.Data.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Services\BettingSystem.DataBaseUpdateService\BettingSystem.DataBaseUpdateService.csproj">
       <Project>{43fdd46a-bb07-44ce-804a-36e90807f56f}</Project>
       <Name>BettingSystem.DataBaseUpdateService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\BettingSystem.DataServices\BettingSystem.DataServices.csproj">
+      <Project>{79bef452-507e-4017-a591-7df4e9b16420}</Project>
+      <Name>BettingSystem.DataServices</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
